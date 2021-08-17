@@ -1,0 +1,14 @@
+- Allow user to submit multiple videos for processing
+- Allow user to view current state of his jobs
+- Allow user to download trimmed videos
+- Allow user to cancel a job
+- Allow user to skip download if someone wanted to trim same video
+
+
+Job can be in one of the states
+- WAITING_DOWNLOAD
+- DOWNLOADING
+- WAITING_TRIM
+- TRIMMING
+- COMPLETED
+- CANCELED
