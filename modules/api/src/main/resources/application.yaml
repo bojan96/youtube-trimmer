@@ -1,0 +1,3 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/youtube_trimmer?user=root&password=root
