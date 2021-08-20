@@ -10,6 +10,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.youtubetrimmer.api.properties.AuthenticationsProperties;
+import org.unibl.etf.youtubetrimmer.api.security.JwtAuthenticationToken;
 import org.unibl.etf.youtubetrimmer.common.entity.UserEntity;
 import org.unibl.etf.youtubetrimmer.common.repository.UserRepository;
 
@@ -79,10 +80,20 @@ public class AuthService {
             return !(ex instanceof UnsupportedJwtException
                     || ex instanceof MalformedJwtException
                     || ex instanceof SignatureException
-                    || tokenExpirationCheck ?
-                    ex instanceof ExpiredJwtException : false);
+                    || (tokenExpirationCheck ?
+                    ex instanceof ExpiredJwtException : false));
 
         }
+    }
+
+    public JwtAuthenticationToken getPrincipalFromToken(String token)
+    {
+        Jws<Claims> claims = parseToken(token);
+        return new JwtAuthenticationToken(getUserId(claims), token);
+    }
+
+    private int getUserId(Jws<Claims> claims) {
+        return Integer.parseInt(claims.getBody().getSubject());
     }
 
     private Jws<Claims> parseToken(String token) {
