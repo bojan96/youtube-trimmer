@@ -13,15 +13,9 @@ public class UserService {
 
     private final UserRepository userRepo;
 
-    public String createNewUser() {
-        String uid = generateUid();
+    public int createNewUser() {
         UserEntity user = new UserEntity();
-        user.setUid(uid);
-        userRepo.save(user);
-        return uid;
-    }
-
-    private String generateUid() {
-        return UUID.randomUUID().toString();
+        UserEntity savedEntity = userRepo.save(user);
+        return savedEntity.getId();
     }
 }
