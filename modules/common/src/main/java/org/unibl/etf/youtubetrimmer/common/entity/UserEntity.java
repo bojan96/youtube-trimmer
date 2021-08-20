@@ -14,8 +14,11 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Basic
-    @Column(name = "uid", nullable = false, length = 255)
-    private String uid;
+    @Column(name = "username", nullable = false, length = 255)
+    private String username;
+    @Basic
+    @Column(name = "password", nullable = false, length = 255)
+    private String password;
     @OneToMany(mappedBy = "user")
     private List<JobEntity> jobs;
 
