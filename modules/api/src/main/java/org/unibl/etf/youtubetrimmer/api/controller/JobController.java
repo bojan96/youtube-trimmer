@@ -2,6 +2,7 @@ package org.unibl.etf.youtubetrimmer.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.unibl.etf.youtubetrimmer.api.model.Job;
 import org.unibl.etf.youtubetrimmer.api.model.JobDetails;
@@ -27,4 +28,12 @@ public class JobController {
         JobDetails jobDetails = jobService.createJob(job);
         return mapper.map(jobDetails, JobResponse.class);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<JobResponse> getJob(@PathVariable int id) {
+        return ResponseEntity.of(jobService
+                .getJobDetails(id)
+                .map(j -> mapper.map(j, JobResponse.class)));
+    }
+
 }

@@ -66,6 +66,15 @@ public class JobService {
         return details;
     }
 
+    public Optional<JobDetails> getJobDetails(int jobId) {
+        return jobRepo.findById(jobId)
+                .map(j -> {
+                    JobDetails jobDetails = mapper.map(j, JobDetails.class);
+                    jobDetails.setVideoUrl(getYoutubeUrl(j.getVideo().getVideoUid()));
+                    return jobDetails;
+                });
+    }
+
     private LocalDateTime now() {
         return LocalDateTime.ofInstant(timeService.now(), ZoneOffset.UTC);
     }
@@ -74,8 +83,7 @@ public class JobService {
         return new YoutubeURLParser(youtubeUrl).getVideoId();
     }
 
-    private String getYoutubeUrl(String videoId)
-    {
+    private String getYoutubeUrl(String videoId) {
         return UriComponentsBuilder.fromHttpUrl(YOUTUBE_URL)
                 .path(WATCH_PATH)
                 .queryParam(VIDEO_PARAM, videoId)
