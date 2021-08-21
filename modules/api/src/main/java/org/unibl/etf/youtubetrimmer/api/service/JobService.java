@@ -1,9 +1,12 @@
 package org.unibl.etf.youtubetrimmer.api.service;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.unibl.etf.youtubetrimmer.api.model.Job;
+import org.unibl.etf.youtubetrimmer.api.model.JobDetails;
 import org.unibl.etf.youtubetrimmer.api.util.YoutubeURLParser;
 import org.unibl.etf.youtubetrimmer.common.entity.JobEntity;
 import org.unibl.etf.youtubetrimmer.common.entity.JobStatus;
@@ -21,13 +24,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JobService {
 
+    private static final String YOUTUBE_URL = "https://youtube.com";
+    private static final String VIDEO_PARAM = "v";
+    private static final String WATCH_PATH = "watch";
+
     private final VideoRepository videoRepo;
     private final UserRepository userRepo;
     private final JobRepository jobRepo;
     private final MessagingService messagingService;
     private final TimeService timeService;
+    private final ModelMapper mapper;
 
-    public int createJob(Job job) {
+    public JobDetails createJob(Job job) {
 
         String videoId = getVideoId(job.getVideoUrl());
         Optional<VideoEntity> video = videoRepo.findOne(Example.of(VideoEntity.builder()
@@ -52,7 +60,10 @@ public class JobService {
         video.ifPresentOrElse(v -> messagingService.sendJobToTrimQueue(savedEntity.getId()),
                 () -> messagingService.sendJobToDownloadQueue(savedEntity.getId()));
 
-        return savedEntity.getId();
+        JobDetails details = mapper.map(savedEntity, JobDetails.class);
+        details.setVideoUrl(getYoutubeUrl(videoId));
+
+        return details;
     }
 
     private LocalDateTime now() {
@@ -61,5 +72,14 @@ public class JobService {
 
     private String getVideoId(String youtubeUrl) {
         return new YoutubeURLParser(youtubeUrl).getVideoId();
+    }
+
+    private String getYoutubeUrl(String videoId)
+    {
+        return UriComponentsBuilder.fromHttpUrl(YOUTUBE_URL)
+                .path(WATCH_PATH)
+                .queryParam(VIDEO_PARAM, videoId)
+                .build()
+                .toString();
     }
 }
