@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterAt(authFilter, BasicAuthenticationFilter.class);
         http.authorizeRequests().mvcMatchers("/api/auth/login").permitAll();
-        http.authorizeRequests().mvcMatchers("/api/auth/token/refresh").authenticated();
+        http.authorizeRequests().mvcMatchers("/api/auth/token/refresh", "/api/job/**").authenticated();
     }
 
 

@@ -1,12 +1,18 @@
 package org.unibl.etf.youtubetrimmer.common.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.unibl.etf.youtubetrimmer.common.converter.JobStatusConverter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "job")
 public class JobEntity {
@@ -30,10 +36,10 @@ public class JobEntity {
     @Basic
     @Column(name = "date", nullable = true)
     private LocalDateTime date;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserEntity user;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "video_id", referencedColumnName = "id", nullable = false)
     private VideoEntity video;
 
