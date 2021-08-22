@@ -10,6 +10,7 @@
     <modules>
         <module>modules/common</module>
         <module>modules/api</module>
+        <module>modules/downloader</module>
     </modules>
     <packaging>pom</packaging>
 
