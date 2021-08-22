@@ -1,4 +1,4 @@
-package org.unibl.etf.youtubetrimmer.api.amqp;
+package org.unibl.etf.youtubetrimmer.api.messaging;
 
 public final class Queues {
     private Queues() {
