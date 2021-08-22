@@ -2,9 +2,10 @@ package org.unibl.etf.youtubetrimmer.api.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.unibl.etf.youtubetrimmer.api.model.Job;
 import org.unibl.etf.youtubetrimmer.api.model.JobDetails;
 import org.unibl.etf.youtubetrimmer.api.util.YoutubeURLParser;
@@ -16,17 +17,15 @@ import org.unibl.etf.youtubetrimmer.common.repository.JobRepository;
 import org.unibl.etf.youtubetrimmer.common.repository.UserRepository;
 import org.unibl.etf.youtubetrimmer.common.repository.VideoRepository;
 
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class JobService {
-
-    private static final String YOUTUBE_URL = "https://youtube.com";
-    private static final String VIDEO_PARAM = "v";
-    private static final String WATCH_PATH = "watch";
 
     private final VideoRepository videoRepo;
     private final UserRepository userRepo;
@@ -61,18 +60,37 @@ public class JobService {
                 () -> messagingService.sendJobToDownloadQueue(savedEntity.getId()));
 
         JobDetails details = mapper.map(savedEntity, JobDetails.class);
-        details.setVideoUrl(getYoutubeUrl(videoId));
 
         return details;
     }
 
-    public Optional<JobDetails> getJobDetails(int jobId) {
+    public Optional<JobDetails> getJob(int jobId) {
         return jobRepo.findById(jobId)
                 .map(j -> {
                     JobDetails jobDetails = mapper.map(j, JobDetails.class);
-                    jobDetails.setVideoUrl(getYoutubeUrl(j.getVideo().getVideoUid()));
                     return jobDetails;
                 });
+    }
+
+    public List<JobDetails> getJobs(int userId) {
+        List<JobEntity> jobs = jobRepo.findAll(userJobsExample(userId),
+                Sort.by(Sort.Order.desc("date")));
+        List<JobDetails> jobDetails = mapEntityToDetails(jobs);
+        return jobDetails;
+    }
+
+    private List<JobDetails> mapEntityToDetails(List<JobEntity> jobs) {
+        Type listType = new TypeToken<List<JobDetails>>() {
+        }.getType();
+        return mapper.map(jobs, listType);
+    }
+
+    private Example<JobEntity> userJobsExample(int userId) {
+        JobEntity job = new JobEntity();
+        UserEntity u = new UserEntity();
+        u.setId(userId);
+        job.setUser(u);
+        return Example.of(job);
     }
 
     private LocalDateTime now() {
@@ -83,11 +101,4 @@ public class JobService {
         return new YoutubeURLParser(youtubeUrl).getVideoId();
     }
 
-    private String getYoutubeUrl(String videoId) {
-        return UriComponentsBuilder.fromHttpUrl(YOUTUBE_URL)
-                .path(WATCH_PATH)
-                .queryParam(VIDEO_PARAM, videoId)
-                .build()
-                .toString();
-    }
 }

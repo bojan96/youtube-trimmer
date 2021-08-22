@@ -2,6 +2,7 @@ package org.unibl.etf.youtubetrimmer.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.unibl.etf.youtubetrimmer.api.model.Job;
@@ -12,6 +13,8 @@ import org.unibl.etf.youtubetrimmer.api.security.JwtAuthenticationToken;
 import org.unibl.etf.youtubetrimmer.api.service.JobService;
 
 import javax.validation.Valid;
+import java.lang.reflect.Type;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/job")
@@ -32,8 +35,19 @@ public class JobController {
     @GetMapping("/{id}")
     public ResponseEntity<JobResponse> getJob(@PathVariable int id) {
         return ResponseEntity.of(jobService
-                .getJobDetails(id)
+                .getJob(id)
                 .map(j -> mapper.map(j, JobResponse.class)));
+    }
+
+    @GetMapping
+    public List<JobResponse> getJobs(JwtAuthenticationToken user) {
+        return mapDetailsToResponse(jobService.getJobs(user.getId()));
+    }
+
+    private List<JobResponse> mapDetailsToResponse(List<JobDetails> jobDetails) {
+        Type listType = new TypeToken<List<JobResponse>>() {
+        }.getType();
+        return mapper.map(jobDetails, listType);
     }
 
 }

@@ -13,7 +13,7 @@ public class AMQPConfiguration {
     }
 
     @Bean(Queues.TRIM)
-    public Queue trimQueue(){
+    public Queue trimQueue() {
         return new Queue(Queues.TRIM);
     }
 }

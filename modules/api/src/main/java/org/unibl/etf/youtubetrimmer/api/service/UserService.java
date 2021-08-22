@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import org.unibl.etf.youtubetrimmer.common.entity.UserEntity;
 import org.unibl.etf.youtubetrimmer.common.repository.UserRepository;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {

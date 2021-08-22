@@ -39,7 +39,7 @@ public class AuthService {
         return userRepo
                 .findOne(Example.of(example))
                 .map(u -> {
-                    if(passwordEncoder.matches(password, u.getPassword()))
+                    if (passwordEncoder.matches(password, u.getPassword()))
                         return generateTokenForUser(u.getId());
 
                     return null;
@@ -54,11 +54,11 @@ public class AuthService {
                 .compact();
     }
 
-    private Date getExpirationDate(){
+    private Date getExpirationDate() {
         int expirationDuration = props.getToken().getExpirationDuration();
         Instant expiration = timeService
-                        .now()
-                        .plus(expirationDuration, ChronoUnit.DAYS);
+                .now()
+                .plus(expirationDuration, ChronoUnit.DAYS);
 
         return Date.from(expiration);
     }
@@ -86,8 +86,7 @@ public class AuthService {
         }
     }
 
-    public JwtAuthenticationToken getPrincipalFromToken(String token)
-    {
+    public JwtAuthenticationToken getPrincipalFromToken(String token) {
         Jws<Claims> claims = parseToken(token);
         return new JwtAuthenticationToken(getUserId(claims), token);
     }
