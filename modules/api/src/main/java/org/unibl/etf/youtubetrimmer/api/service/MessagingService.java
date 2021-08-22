@@ -3,7 +3,7 @@ package org.unibl.etf.youtubetrimmer.api.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import org.unibl.etf.youtubetrimmer.api.messaging.Queues;
+import org.unibl.etf.youtubetrimmer.common.messaging.Queues;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.DownloadMessage;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.TrimMessage;
 
