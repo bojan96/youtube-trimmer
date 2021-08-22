@@ -1,4 +1,4 @@
-package org.unibl.etf.youtubetrimmer.common.message;
+package org.unibl.etf.youtubetrimmer.common.messaging.model;
 
 import lombok.Builder;
 import lombok.Data;
