@@ -9,4 +9,5 @@ import java.io.Serializable;
 @Builder
 public class TrimMessage implements Serializable {
     private static final long serialVersionUID = 1;
+    private int jobId;
 }
