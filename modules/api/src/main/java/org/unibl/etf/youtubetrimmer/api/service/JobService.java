@@ -13,6 +13,8 @@ import org.unibl.etf.youtubetrimmer.common.entity.JobEntity;
 import org.unibl.etf.youtubetrimmer.common.entity.JobStatus;
 import org.unibl.etf.youtubetrimmer.common.entity.UserEntity;
 import org.unibl.etf.youtubetrimmer.common.entity.VideoEntity;
+import org.unibl.etf.youtubetrimmer.common.message.DownloadMessage;
+import org.unibl.etf.youtubetrimmer.common.message.TrimMessage;
 import org.unibl.etf.youtubetrimmer.common.repository.JobRepository;
 import org.unibl.etf.youtubetrimmer.common.repository.UserRepository;
 import org.unibl.etf.youtubetrimmer.common.repository.VideoRepository;
@@ -56,10 +58,16 @@ public class JobService {
             jobEntity.setVideo(videoEntity);
         });
         JobEntity savedEntity = jobRepo.save(jobEntity);
-        video.ifPresentOrElse(v -> messagingService.sendJobToTrimQueue(savedEntity.getId()),
-                () -> messagingService.sendJobToDownloadQueue(savedEntity.getId()));
-
         JobDetails details = mapper.map(savedEntity, JobDetails.class);
+
+
+        video.ifPresentOrElse(v -> messagingService.sendJobToTrimQueue(TrimMessage.builder().build()),
+                () -> messagingService.sendJobToDownloadQueue(
+                        DownloadMessage
+                                .builder()
+                                .jobId(details.getId())
+                                .videoUrl(details.getVideoUrl())
+                                .build()));
 
         return details;
     }
