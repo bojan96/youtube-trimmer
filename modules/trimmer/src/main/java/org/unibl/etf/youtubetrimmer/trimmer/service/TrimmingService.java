@@ -24,7 +24,7 @@ public class TrimmingService {
 
     @SneakyThrows
     public Optional<Path> trim(String videoPath, int trimFrom, int trimTo) {
-        FileUtils.cleanDirectory(Path.of(props.getWorkingDirectory()));
+        cleanWorkingDir();
         Process process = createTrimProcess(videoPath, trimFrom, trimTo - trimFrom);
 
         while (process.isAlive()) {
@@ -49,10 +49,16 @@ public class TrimmingService {
                 "-t",
                 Integer.toString(length),
                 "-codec:v",
-                "x264",
+                "libx264",
                 filename);
+        builder.redirectError(ProcessBuilder.Redirect.DISCARD);
         builder.directory(new File(props.getWorkingDirectory()));
         return builder.start();
+    }
+
+    @SneakyThrows
+    private void cleanWorkingDir() {
+        FileUtils.cleanDirectory(Path.of(props.getWorkingDirectory()));
     }
 
     @SneakyThrows

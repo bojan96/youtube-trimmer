@@ -4,6 +4,7 @@ import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.youtubetrimmer.common.util.FileUtils;
 import org.unibl.etf.youtubetrimmer.downloader.properties.DownloaderProperties;
 
 import java.io.File;
@@ -25,7 +26,7 @@ public class DownloadService {
 
     @SneakyThrows
     public Optional<Path> download(String videoUrl) {
-        //cleanWorkingDir();
+        cleanWorkingDir();
         Process process = createDownloadProcess(videoUrl);
 
         while (process.isAlive()) {
@@ -51,14 +52,7 @@ public class DownloadService {
 
     @SneakyThrows
     private void cleanWorkingDir() {
-        @Cleanup Stream<Path> files = Files.list(Path.of(downloadProps.getWorkingDirectory()));
-        files.forEach(file -> {
-            try {
-                Files.delete(file);
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        });
+        FileUtils.cleanDirectory(Path.of(downloadProps.getWorkingDirectory()));
     }
 
 
