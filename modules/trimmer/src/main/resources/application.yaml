@@ -1,0 +1,3 @@
+trimmer:
+  working-directory: ${user.home}/youtube-trimmer/trimmer
+  output-directory: ${user.home}/youtube-trimmer/trimmed
