@@ -11,6 +11,7 @@
         <module>modules/common</module>
         <module>modules/api</module>
         <module>modules/downloader</module>
+        <module>modules/trimmer</module>
     </modules>
     <packaging>pom</packaging>
 
