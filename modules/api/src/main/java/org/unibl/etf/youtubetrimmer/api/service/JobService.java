@@ -61,7 +61,9 @@ public class JobService {
         JobDetails details = mapper.map(savedEntity, JobDetails.class);
 
 
-        video.ifPresentOrElse(v -> messagingService.sendJobToTrimQueue(TrimMessage.builder().build()),
+        video.ifPresentOrElse(v -> messagingService.sendJobToTrimQueue(TrimMessage.builder()
+                        .jobId(details.getId())
+                        .build()),
                 () -> messagingService.sendJobToDownloadQueue(
                         DownloadMessage
                                 .builder()
