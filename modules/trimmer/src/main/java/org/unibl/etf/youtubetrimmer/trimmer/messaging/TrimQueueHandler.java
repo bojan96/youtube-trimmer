@@ -46,7 +46,7 @@ public class TrimQueueHandler {
             return;
         }
 
-        markJobAsTrimmming(jobEntity);
+        markJobAsTrimming(jobEntity);
         Optional<Path> video = trimmingService.trim(jobEntity.getVideo().getVideoReference(),
                 jobEntity.getTrimFrom(), jobEntity.getTrimTo());
 
@@ -65,7 +65,7 @@ public class TrimQueueHandler {
 
     }
 
-    private void markJobAsTrimmming(JobEntity jobEntity) {
+    private void markJobAsTrimming(JobEntity jobEntity) {
         jobEntity.setStatus(JobStatus.TRIMMING);
         jobRepo.save(jobEntity);
         messagingService.sendMessageToEventsQueue(EventMessage.builder().build());

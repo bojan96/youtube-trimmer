@@ -51,9 +51,7 @@ public class TrimmingService {
                 "-codec:v",
                 "x264",
                 filename);
-
         builder.directory(new File(props.getWorkingDirectory()));
-
         return builder.start();
     }
 
