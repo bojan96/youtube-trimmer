@@ -35,10 +35,10 @@ public class TrimQueueHandler {
     @SneakyThrows
     public void handleMessage(TrimMessage message) {
 
-        log.info("Processing job(id = {})", message.getJobId());
         Optional<JobEntity> job = jobRepo.findById(message.getJobId());
         if (job.isEmpty())
             return;
+        log.info("Processing job(id = {})", message.getJobId());
 
         JobEntity jobEntity = job.get();
         if (jobEntity.getStatus() == JobStatus.CANCELED) {
@@ -56,7 +56,8 @@ public class TrimQueueHandler {
         }
 
         Path videoPath = video.get();
-        Path targetPath = Path.of(props.getOutputDirectory()).resolve(videoPath.getFileName());
+        Path targetPath = Path.of(props.getOutputDirectory()).resolve(message.getJobId() +
+                videoPath.getFileName().toString());
         Files.copy(videoPath, targetPath);
 
         jobEntity.setTrimmedVideoReference(targetPath.toString());

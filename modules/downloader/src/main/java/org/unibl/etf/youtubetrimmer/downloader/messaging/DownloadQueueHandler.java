@@ -36,10 +36,10 @@ public class DownloadQueueHandler {
     @SneakyThrows
     public void handleMessage(DownloadMessage message) {
 
-        log.info("Processing job(id = {}, url = {})", message.getJobId(), message.getVideoUrl());
         Optional<JobEntity> job = jobRepo.findById(message.getJobId());
         if (job.isEmpty())
             return;
+        log.info("Processing job(id = {}, url = {})", message.getJobId(), message.getVideoUrl());
 
         JobEntity jobEntity = job.get();
         if (jobEntity.getStatus() == JobStatus.CANCELED) {
