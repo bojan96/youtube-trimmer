@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterAt(authFilter, BasicAuthenticationFilter.class);
         http.authorizeRequests().mvcMatchers("/api/auth/login").permitAll();
         http.authorizeRequests().mvcMatchers("/api/auth/token/refresh").authenticated();
-        http.authorizeRequests().mvcMatchers("/api/job").authenticated();
+        http.authorizeRequests().mvcMatchers("/api/job", "/api/job/*/cancel").authenticated();
     }
 
 
