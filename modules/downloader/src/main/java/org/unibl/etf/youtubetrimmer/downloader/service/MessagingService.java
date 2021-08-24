@@ -17,7 +17,7 @@ public class MessagingService {
     }
 
     public void sendMessageToJobEventsQueue(JobEventMessage message) {
-
+        rabbitTemplate.convertAndSend(Queues.JOB_EVENT, message);
     }
 
 
