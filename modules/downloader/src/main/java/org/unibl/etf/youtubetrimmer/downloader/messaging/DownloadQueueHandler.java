@@ -68,13 +68,23 @@ public class DownloadQueueHandler {
     private void markJobAsDownloading(JobEntity jobEntity) {
         jobEntity.setStatus(JobStatus.DOWNLOADING);
         jobRepo.save(jobEntity);
-        messagingService.sendMessageToJobEventsQueue(JobEventMessage.builder().build());
+        messagingService.sendMessageToJobEventsQueue(JobEventMessage
+                .builder()
+                .id(jobEntity.getId())
+                .username(jobEntity.getUser().getUsername())
+                .newStatus(JobStatus.DOWNLOADING)
+                .build());
     }
 
     private void markJobAsWaitingTrim(JobEntity jobEntity) {
         jobEntity.setStatus(JobStatus.WAITING_TRIM);
         jobRepo.save(jobEntity);
-        messagingService.sendMessageToJobEventsQueue(JobEventMessage.builder().build());
+        messagingService.sendMessageToJobEventsQueue(JobEventMessage
+                .builder()
+                .id(jobEntity.getId())
+                .username(jobEntity.getUser().getUsername())
+                .newStatus(JobStatus.WAITING_TRIM)
+                .build());
     }
 
 

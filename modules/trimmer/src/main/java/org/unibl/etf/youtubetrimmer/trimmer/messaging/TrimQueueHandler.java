@@ -69,13 +69,23 @@ public class TrimQueueHandler {
     private void markJobAsTrimming(JobEntity jobEntity) {
         jobEntity.setStatus(JobStatus.TRIMMING);
         jobRepo.save(jobEntity);
-        messagingService.sendMessageToJobEventsQueue(JobEventMessage.builder().build());
+        messagingService.sendMessageToJobEventsQueue(JobEventMessage
+                .builder()
+                .id(jobEntity.getId())
+                .username(jobEntity.getUser().getUsername())
+                .newStatus(JobStatus.TRIMMING)
+                .build());
     }
 
     private void markJobAsCompleted(JobEntity jobEntity) {
         jobEntity.setStatus(JobStatus.COMPLETE);
         jobRepo.save(jobEntity);
-        messagingService.sendMessageToJobEventsQueue(JobEventMessage.builder().build());
+        messagingService.sendMessageToJobEventsQueue(JobEventMessage
+                .builder()
+                .id(jobEntity.getId())
+                .username(jobEntity.getUser().getUsername())
+                .newStatus(JobStatus.COMPLETE)
+                .build());
     }
 
 }
