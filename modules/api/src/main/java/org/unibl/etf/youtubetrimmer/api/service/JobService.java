@@ -53,27 +53,25 @@ public class JobService {
                 .date(now())
                 .build();
 
-        video.ifPresentOrElse(v -> {
-            jobEntity.setStatus(JobStatus.WAITING_TRIM);
-            jobEntity.setVideo(v);
-        }, () -> {
-            jobEntity.setStatus(JobStatus.WAITING_DOWNLOAD);
-            VideoEntity videoEntity = VideoEntity.builder().videoUid(videoId).build();
-            jobEntity.setVideo(videoEntity);
-        });
+        VideoEntity videoEntity = video.orElseGet(() -> VideoEntity.builder().videoUid(videoId).build());
+        jobEntity.setVideo(videoEntity);
+        boolean skipDownload = videoEntity.getVideoReference() != null;
+        jobEntity.setStatus(skipDownload ? JobStatus.WAITING_TRIM : JobStatus.WAITING_DOWNLOAD);
         JobEntity savedEntity = jobRepo.save(jobEntity);
         JobDetails details = mapper.map(savedEntity, JobDetails.class);
 
-
-        video.ifPresentOrElse(v -> messagingService.sendJobToTrimQueue(TrimMessage.builder()
-                        .jobId(details.getId())
-                        .build()),
-                () -> messagingService.sendJobToDownloadQueue(
-                        DownloadMessage
-                                .builder()
-                                .jobId(details.getId())
-                                .videoUrl(details.getVideoUrl())
-                                .build()));
+        if (skipDownload) {
+            messagingService.sendJobToTrimQueue(TrimMessage.builder()
+                    .jobId(details.getId())
+                    .build());
+        } else {
+            messagingService.sendJobToDownloadQueue(
+                    DownloadMessage
+                            .builder()
+                            .jobId(details.getId())
+                            .videoUrl(details.getVideoUrl())
+                            .build());
+        }
 
         return details;
     }
@@ -96,11 +94,11 @@ public class JobService {
     public void cancelJob(int jobId, int userId) {
         Optional<JobEntity> job = jobRepo.findById(jobId);
         JobEntity jobEntity = job.orElseThrow(NotFoundException::new);
-        if(jobEntity.getUser().getId() != userId)
+        if (jobEntity.getUser().getId() != userId)
             throw new IllegalOperationException();
-        if(jobEntity.getStatus() == JobStatus.COMPLETE)
+        if (jobEntity.getStatus() == JobStatus.COMPLETE)
             throw new IllegalOperationException();
-        if(jobEntity.getStatus() == JobStatus.CANCELED)
+        if (jobEntity.getStatus() == JobStatus.CANCELED)
             return;
         jobEntity.setStatus(JobStatus.CANCELED);
         jobRepo.save(jobEntity);
