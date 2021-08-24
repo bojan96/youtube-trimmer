@@ -89,6 +89,18 @@ public class AuthService {
         }
     }
 
+    public boolean isTokenValid(String token) {
+        try {
+            parseToken(token);
+            return true;
+        } catch (UnsupportedJwtException
+                | MalformedJwtException
+                | SignatureException
+                | ExpiredJwtException ex) {
+            return false;
+        }
+    }
+
     public JwtAuthenticationToken getPrincipalFromToken(String token) {
         Jws<Claims> claims = parseToken(token);
         return new JwtAuthenticationToken(getUserId(claims), token, getUsername(claims));
