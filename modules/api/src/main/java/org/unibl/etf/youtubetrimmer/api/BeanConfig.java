@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.unibl.etf.youtubetrimmer.api.model.JobDetails;
-import org.unibl.etf.youtubetrimmer.api.model.message.JobStatusMessage;
+import org.unibl.etf.youtubetrimmer.api.model.stomp.JobEventStompMessage;
 import org.unibl.etf.youtubetrimmer.api.util.LambdaConverter;
 import org.unibl.etf.youtubetrimmer.api.util.URLUtils;
 import org.unibl.etf.youtubetrimmer.common.entity.JobEntity;
@@ -23,10 +23,10 @@ public class BeanConfig {
                 .addMappings(m -> m.using(LambdaConverter.of(URLUtils::getYoutubeUrl))
                         .map(j -> j.getVideo().getVideoUid(), JobDetails::setVideoUrl));
 
-        mapper.typeMap(JobEventMessage.class, JobStatusMessage.class)
+        mapper.typeMap(JobEventMessage.class, JobEventStompMessage.class)
                 .addMappings(m ->
                         m.using(LambdaConverter.of(JobStatus::getDBValue))
-                        .map(JobEventMessage::getNewStatus, JobStatusMessage::setNewStatus));
+                        .map(JobEventMessage::getNewStatus, JobEventStompMessage::setNewStatus));
         return mapper;
     }
 }

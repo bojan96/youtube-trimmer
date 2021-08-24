@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
-import org.unibl.etf.youtubetrimmer.api.model.message.JobStatusMessage;
+import org.unibl.etf.youtubetrimmer.api.model.stomp.JobEventStompMessage;
 import org.unibl.etf.youtubetrimmer.common.messaging.Queues;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.JobEventMessage;
 
@@ -21,7 +21,7 @@ public class JobEventsQueueListener {
 
     @RabbitHandler
     public void handleMessage(JobEventMessage message) {
-        JobStatusMessage statusMessage = mapper.map(message, JobStatusMessage.class);
+        JobEventStompMessage statusMessage = mapper.map(message, JobEventStompMessage.class);
         stompSender.convertAndSendToUser(message.getUsername(), JOB_STATUS_PATH, statusMessage);
     }
 }
