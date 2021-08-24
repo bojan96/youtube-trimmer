@@ -8,11 +8,10 @@ import org.unibl.etf.youtubetrimmer.common.util.FileUtils;
 import org.unibl.etf.youtubetrimmer.downloader.properties.DownloaderProperties;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -23,17 +22,26 @@ public class DownloadService {
     private static final String OUTPUT_FILENAME_FORMAT = "%(id)s";
     private static final int POLL_TIME = 500;
     private final DownloaderProperties downloadProps;
+    private final ConcurrentLinkedQueue<Integer> cancelQueue = new ConcurrentLinkedQueue<>();
 
     @SneakyThrows
-    public Optional<Path> download(String videoUrl) {
+    public Optional<Path> download(String videoUrl, int jobId) {
         cleanWorkingDir();
         Process process = createDownloadProcess(videoUrl);
 
         while (process.isAlive()) {
             process.waitFor(POLL_TIME, TimeUnit.MILLISECONDS);
+            if (!cancelQueue.isEmpty() && cancelQueue.poll() == jobId) {
+                process.destroy();
+                return Optional.empty();
+            }
         }
 
         return getDownloadedVideoPath();
+    }
+
+    public void cancelDownload(int jobId) {
+        cancelQueue.add(jobId);
     }
 
     @SneakyThrows

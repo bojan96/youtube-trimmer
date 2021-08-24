@@ -48,7 +48,7 @@ public class DownloadQueueHandler {
         }
 
         markJobAsDownloading(jobEntity);
-        Optional<Path> video = downloadService.download(message.getVideoUrl());
+        Optional<Path> video = downloadService.download(message.getVideoUrl(), message.getJobId());
         if (video.isEmpty()) {
             log.info("Job(id = {}) is canceled", message.getJobId());
             return;
