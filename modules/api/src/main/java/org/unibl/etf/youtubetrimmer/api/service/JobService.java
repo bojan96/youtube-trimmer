@@ -107,6 +107,7 @@ public class JobService {
         messagingService.sendCommand(CommandMessage
                 .builder()
                 .command(Command.CANCEL)
+                .parameter(jobId)
                 .build());
     }
 
