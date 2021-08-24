@@ -28,6 +28,6 @@ public class MessagingService {
     }
 
     public void sendCommandToTrimmers(CommandMessage commandMessage) {
-        rabbitTemplate.convertAndSend(Exchanges.TRIMMER_COMMAND);
+        rabbitTemplate.convertAndSend(Exchanges.TRIMMER_COMMAND, "", commandMessage);
     }
 }

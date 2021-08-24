@@ -11,6 +11,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -21,17 +22,26 @@ public class TrimmingService {
     private final TrimmerProperties props;
     private static final String OUTPUT_EXTENSION = "mp4";
     private static final int POLL_TIME = 500;
+    private final ConcurrentLinkedQueue<Integer> cancelQueue = new ConcurrentLinkedQueue<>();
 
     @SneakyThrows
-    public Optional<Path> trim(String videoPath, int trimFrom, int trimTo) {
+    public Optional<Path> trim(String videoPath, int trimFrom, int trimTo, int jobId) {
         cleanWorkingDir();
         Process process = createTrimProcess(videoPath, trimFrom, trimTo - trimFrom);
 
         while (process.isAlive()) {
             process.waitFor(POLL_TIME, TimeUnit.MILLISECONDS);
+            if (!cancelQueue.isEmpty() && cancelQueue.poll() == jobId) {
+                process.destroy();
+                return Optional.empty();
+            }
         }
 
         return getTrimmedVideoPath();
+    }
+
+    public void cancelJob(int jobId) {
+        cancelQueue.add(jobId);
     }
 
     @SneakyThrows

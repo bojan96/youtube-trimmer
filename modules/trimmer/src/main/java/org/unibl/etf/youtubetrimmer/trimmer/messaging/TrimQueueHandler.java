@@ -48,7 +48,7 @@ public class TrimQueueHandler {
 
         markJobAsTrimming(jobEntity);
         Optional<Path> video = trimmingService.trim(jobEntity.getVideo().getVideoReference(),
-                jobEntity.getTrimFrom(), jobEntity.getTrimTo());
+                jobEntity.getTrimFrom(), jobEntity.getTrimTo(), message.getJobId());
 
         if (video.isEmpty()) {
             log.info("Job(id = {}) is canceled", message.getJobId());
