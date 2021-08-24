@@ -21,6 +21,11 @@ public class MessagingConfiguration {
     }
 
     @Bean
+    public Queue jobEventQueue() {
+        return new Queue(Queues.JOB_EVENT, false);
+    }
+
+    @Bean
     public FanoutExchange commandExchange() {
         return new FanoutExchange(Exchanges.DOWNLOADER_COMMAND);
     }
