@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.unibl.etf.youtubetrimmer.common.entity.JobEntity;
 import org.unibl.etf.youtubetrimmer.common.entity.JobStatus;
 import org.unibl.etf.youtubetrimmer.common.messaging.Queues;
-import org.unibl.etf.youtubetrimmer.common.messaging.model.EventMessage;
+import org.unibl.etf.youtubetrimmer.common.messaging.model.JobEventMessage;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.TrimMessage;
 import org.unibl.etf.youtubetrimmer.common.repository.JobRepository;
 import org.unibl.etf.youtubetrimmer.trimmer.properties.TrimmerProperties;
@@ -69,13 +69,13 @@ public class TrimQueueHandler {
     private void markJobAsTrimming(JobEntity jobEntity) {
         jobEntity.setStatus(JobStatus.TRIMMING);
         jobRepo.save(jobEntity);
-        messagingService.sendMessageToEventsQueue(EventMessage.builder().build());
+        messagingService.sendMessageToJobEventsQueue(JobEventMessage.builder().build());
     }
 
     private void markJobAsCompleted(JobEntity jobEntity) {
         jobEntity.setStatus(JobStatus.COMPLETE);
         jobRepo.save(jobEntity);
-        messagingService.sendMessageToEventsQueue(EventMessage.builder().build());
+        messagingService.sendMessageToJobEventsQueue(JobEventMessage.builder().build());
     }
 
 }

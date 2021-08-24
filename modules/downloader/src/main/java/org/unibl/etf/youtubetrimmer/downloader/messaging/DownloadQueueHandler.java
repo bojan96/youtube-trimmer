@@ -10,7 +10,7 @@ import org.unibl.etf.youtubetrimmer.common.entity.JobEntity;
 import org.unibl.etf.youtubetrimmer.common.entity.JobStatus;
 import org.unibl.etf.youtubetrimmer.common.messaging.Queues;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.DownloadMessage;
-import org.unibl.etf.youtubetrimmer.common.messaging.model.EventMessage;
+import org.unibl.etf.youtubetrimmer.common.messaging.model.JobEventMessage;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.TrimMessage;
 import org.unibl.etf.youtubetrimmer.common.repository.JobRepository;
 import org.unibl.etf.youtubetrimmer.downloader.properties.DownloaderProperties;
@@ -68,13 +68,13 @@ public class DownloadQueueHandler {
     private void markJobAsDownloading(JobEntity jobEntity) {
         jobEntity.setStatus(JobStatus.DOWNLOADING);
         jobRepo.save(jobEntity);
-        messagingService.sendMessageToEventsQueue(EventMessage.builder().build());
+        messagingService.sendMessageToJobEventsQueue(JobEventMessage.builder().build());
     }
 
     private void markJobAsWaitingTrim(JobEntity jobEntity) {
         jobEntity.setStatus(JobStatus.WAITING_TRIM);
         jobRepo.save(jobEntity);
-        messagingService.sendMessageToEventsQueue(EventMessage.builder().build());
+        messagingService.sendMessageToJobEventsQueue(JobEventMessage.builder().build());
     }
 
 

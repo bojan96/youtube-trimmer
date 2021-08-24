@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 public final class Queues {
     public static final String DOWNLOAD = "download_queue";
     public static final String TRIM = "trim_queue";
+    public static final String JOB_EVENT = "job_event_queue";
 }

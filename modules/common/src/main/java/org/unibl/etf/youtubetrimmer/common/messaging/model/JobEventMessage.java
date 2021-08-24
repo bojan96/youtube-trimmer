@@ -7,6 +7,6 @@ import java.io.Serializable;
 
 @Getter
 @Builder
-public class EventMessage implements Serializable {
+public class JobEventMessage implements Serializable {
     private static final long serialVersionUID = 1;
 }
