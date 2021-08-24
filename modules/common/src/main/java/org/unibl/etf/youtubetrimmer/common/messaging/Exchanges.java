@@ -1,4 +1,4 @@
-package org.unibl.etf.youtubetrimmer.api.messaging;
+package org.unibl.etf.youtubetrimmer.common.messaging;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

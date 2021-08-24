@@ -4,6 +4,7 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.unibl.etf.youtubetrimmer.common.messaging.Exchanges;
 import org.unibl.etf.youtubetrimmer.common.messaging.Queues;
 
 @Configuration
