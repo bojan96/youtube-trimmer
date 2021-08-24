@@ -3,8 +3,11 @@ package org.unibl.etf.youtubetrimmer.api.controller;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.unibl.etf.youtubetrimmer.api.exception.IllegalOperationException;
+import org.unibl.etf.youtubetrimmer.api.exception.NotFoundException;
 import org.unibl.etf.youtubetrimmer.api.model.Job;
 import org.unibl.etf.youtubetrimmer.api.model.JobDetails;
 import org.unibl.etf.youtubetrimmer.api.model.request.JobRequest;
@@ -38,6 +41,19 @@ public class JobController {
                 .getJob(id)
                 .map(j -> mapper.map(j, JobResponse.class)));
     }
+
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity cancelJob(@PathVariable int id, JwtAuthenticationToken user) {
+        try {
+            jobService.cancelJob(id, user.getId());
+            return ResponseEntity.noContent().build();
+        } catch (NotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalOperationException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
 
     @GetMapping
     public List<JobResponse> getJobs(JwtAuthenticationToken user) {

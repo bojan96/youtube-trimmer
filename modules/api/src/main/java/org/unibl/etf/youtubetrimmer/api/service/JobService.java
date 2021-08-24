@@ -6,6 +6,8 @@ import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.youtubetrimmer.api.exception.IllegalOperationException;
+import org.unibl.etf.youtubetrimmer.api.exception.NotFoundException;
 import org.unibl.etf.youtubetrimmer.api.model.Job;
 import org.unibl.etf.youtubetrimmer.api.model.JobDetails;
 import org.unibl.etf.youtubetrimmer.api.util.YoutubeURLParser;
@@ -13,6 +15,8 @@ import org.unibl.etf.youtubetrimmer.common.entity.JobEntity;
 import org.unibl.etf.youtubetrimmer.common.entity.JobStatus;
 import org.unibl.etf.youtubetrimmer.common.entity.UserEntity;
 import org.unibl.etf.youtubetrimmer.common.entity.VideoEntity;
+import org.unibl.etf.youtubetrimmer.common.messaging.model.Command;
+import org.unibl.etf.youtubetrimmer.common.messaging.model.CommandMessage;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.DownloadMessage;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.TrimMessage;
 import org.unibl.etf.youtubetrimmer.common.repository.JobRepository;
@@ -88,6 +92,19 @@ public class JobService {
         List<JobDetails> jobDetails = mapEntityToDetails(jobs);
         return jobDetails;
     }
+
+    public void cancelJob(int jobId, int userId) {
+        Optional<JobEntity> job = jobRepo.findById(jobId);
+        JobEntity jobEntity = job.orElseThrow(NotFoundException::new);
+        if(jobEntity.getUser().getId() != userId)
+            throw new IllegalOperationException();
+        jobEntity.setStatus(JobStatus.CANCELED);
+        messagingService.sendCommand(CommandMessage
+                .builder()
+                .command(Command.CANCEL)
+                .build());
+    }
+
 
     private List<JobDetails> mapEntityToDetails(List<JobEntity> jobs) {
         Type listType = new TypeToken<List<JobDetails>>() {
