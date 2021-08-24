@@ -14,6 +14,7 @@ public class JwtAuthenticationToken implements Authentication {
     @Getter
     private final int id;
     private final String token;
+    private final String name;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -32,7 +33,7 @@ public class JwtAuthenticationToken implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return Integer.toString(id);
+        return name;
     }
 
     @Override
@@ -47,6 +48,6 @@ public class JwtAuthenticationToken implements Authentication {
 
     @Override
     public String getName() {
-        return Integer.toString(id);
+        return name;
     }
 }

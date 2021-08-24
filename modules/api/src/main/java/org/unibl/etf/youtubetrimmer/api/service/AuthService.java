@@ -27,6 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private static final String UID_CLAIM = "uid";
     private final TimeService timeService;
     private final AuthenticationsProperties props;
     private final UserRepository userRepo;
@@ -40,15 +41,16 @@ public class AuthService {
                 .findOne(Example.of(example))
                 .map(u -> {
                     if (passwordEncoder.matches(password, u.getPassword()))
-                        return generateTokenForUser(u.getId());
+                        return generateTokenForUser(u.getId(), username);
 
                     return null;
                 });
     }
 
-    private String generateTokenForUser(Integer userId) {
+    private String generateTokenForUser(int userId, String username) {
         return Jwts.builder()
-                .setSubject(userId.toString())
+                .setSubject(username)
+                .claim(UID_CLAIM, userId)
                 .setExpiration(getExpirationDate())
                 .signWith(getSigningKey())
                 .compact();
@@ -66,9 +68,10 @@ public class AuthService {
     public String issueToken(String oldToken) {
         Jws<Claims> claims = parseToken(oldToken);
         Instant expiration = claims.getBody().getExpiration().toInstant();
-        int userId = Integer.parseInt(claims.getBody().getSubject());
+        int userId = getUserId(claims);
+        String username = getUsername(claims);
         Duration duration = Duration.between(timeService.now(), expiration);
-        return duration.toDays() < 3 ? generateTokenForUser(userId) : oldToken;
+        return duration.toDays() < 3 ? generateTokenForUser(userId, username) : oldToken;
     }
 
     public boolean isTokenValid(String token, boolean tokenExpirationCheck) {
@@ -88,12 +91,17 @@ public class AuthService {
 
     public JwtAuthenticationToken getPrincipalFromToken(String token) {
         Jws<Claims> claims = parseToken(token);
-        return new JwtAuthenticationToken(getUserId(claims), token);
+        return new JwtAuthenticationToken(getUserId(claims), token, getUsername(claims));
     }
 
     private int getUserId(Jws<Claims> claims) {
-        return Integer.parseInt(claims.getBody().getSubject());
+        return claims.getBody().get(UID_CLAIM, Integer.class);
     }
+
+    private String getUsername(Jws<Claims> claims) {
+        return claims.getBody().getSubject();
+    }
+
 
     private Jws<Claims> parseToken(String token) {
         return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
