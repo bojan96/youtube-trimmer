@@ -25,4 +25,9 @@ public class MessagingConfiguration {
         return new FanoutExchange(Exchanges.DOWNLOADER_COMMAND);
     }
 
+    @Bean
+    public FanoutExchange trimmerExchange() {
+        return new FanoutExchange(Exchanges.TRIMMER_COMMAND);
+    }
+
 }

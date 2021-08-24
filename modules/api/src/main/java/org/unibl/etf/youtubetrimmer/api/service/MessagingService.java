@@ -23,7 +23,11 @@ public class MessagingService {
         rabbitTemplate.convertAndSend(Queues.TRIM, trimMessage);
     }
 
-    public void sendCommand(CommandMessage commandMessage) {
+    public void sendCommandToDownloaders(CommandMessage commandMessage) {
         rabbitTemplate.convertAndSend(Exchanges.DOWNLOADER_COMMAND, "", commandMessage);
+    }
+
+    public void sendCommandToTrimmers(CommandMessage commandMessage) {
+        rabbitTemplate.convertAndSend(Exchanges.TRIMMER_COMMAND);
     }
 }

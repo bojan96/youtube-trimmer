@@ -94,19 +94,29 @@ public class JobService {
     public void cancelJob(int jobId, int userId) {
         Optional<JobEntity> job = jobRepo.findById(jobId);
         JobEntity jobEntity = job.orElseThrow(NotFoundException::new);
+        JobStatus jobStatus = jobEntity.getStatus();
+
         if (jobEntity.getUser().getId() != userId)
             throw new IllegalOperationException();
-        if (jobEntity.getStatus() == JobStatus.COMPLETE)
+        if (jobStatus == JobStatus.COMPLETE)
             throw new IllegalOperationException();
-        if (jobEntity.getStatus() == JobStatus.CANCELED)
+        if (jobStatus == JobStatus.CANCELED)
             return;
+
         jobEntity.setStatus(JobStatus.CANCELED);
         jobRepo.save(jobEntity);
-        messagingService.sendCommand(CommandMessage
+
+        CommandMessage cancellationMessage = CommandMessage
                 .builder()
                 .command(Command.CANCEL)
                 .parameter(jobId)
-                .build());
+                .build();
+
+        if(jobStatus == JobStatus.WAITING_DOWNLOAD
+                || jobStatus == JobStatus.DOWNLOADING)
+            messagingService.sendCommandToDownloaders(cancellationMessage);
+        else
+            messagingService.sendCommandToTrimmers(cancellationMessage);
     }
 
 
