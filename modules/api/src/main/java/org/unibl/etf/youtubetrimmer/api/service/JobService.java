@@ -98,7 +98,12 @@ public class JobService {
         JobEntity jobEntity = job.orElseThrow(NotFoundException::new);
         if(jobEntity.getUser().getId() != userId)
             throw new IllegalOperationException();
+        if(jobEntity.getStatus() == JobStatus.COMPLETE)
+            throw new IllegalOperationException();
+        if(jobEntity.getStatus() == JobStatus.CANCELED)
+            return;
         jobEntity.setStatus(JobStatus.CANCELED);
+        jobRepo.save(jobEntity);
         messagingService.sendCommand(CommandMessage
                 .builder()
                 .command(Command.CANCEL)

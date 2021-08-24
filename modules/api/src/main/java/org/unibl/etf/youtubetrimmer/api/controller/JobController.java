@@ -6,6 +6,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.unibl.etf.youtubetrimmer.api.exception.ForbiddenAccessException;
 import org.unibl.etf.youtubetrimmer.api.exception.IllegalOperationException;
 import org.unibl.etf.youtubetrimmer.api.exception.NotFoundException;
 import org.unibl.etf.youtubetrimmer.api.model.Job;
@@ -50,6 +51,8 @@ public class JobController {
         } catch (NotFoundException ex) {
             return ResponseEntity.notFound().build();
         } catch (IllegalOperationException ex) {
+            return ResponseEntity.badRequest().build();
+        } catch (ForbiddenAccessException ex) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
