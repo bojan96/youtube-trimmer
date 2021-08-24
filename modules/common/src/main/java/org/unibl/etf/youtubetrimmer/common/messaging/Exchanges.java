@@ -5,5 +5,5 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Exchanges {
-    public static final String COMMAND = "command_exchange";
+    public static final String DOWNLOADER_COMMAND = "downloader_command_exchange";
 }

@@ -22,7 +22,7 @@ public class MessagingConfiguration {
 
     @Bean
     public FanoutExchange commandExchange() {
-        return new FanoutExchange(Exchanges.COMMAND);
+        return new FanoutExchange(Exchanges.DOWNLOADER_COMMAND);
     }
 
 }

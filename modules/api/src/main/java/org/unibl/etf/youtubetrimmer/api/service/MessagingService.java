@@ -24,6 +24,6 @@ public class MessagingService {
     }
 
     public void sendCommand(CommandMessage commandMessage) {
-        rabbitTemplate.convertAndSend(Exchanges.COMMAND, "", commandMessage);
+        rabbitTemplate.convertAndSend(Exchanges.DOWNLOADER_COMMAND, "", commandMessage);
     }
 }
