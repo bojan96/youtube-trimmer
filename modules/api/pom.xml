@@ -12,9 +12,10 @@
     <artifactId>api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>api</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Youtube Trimmer API module</description>
     <properties>
         <java.version>11</java.version>
+        <docker.skip.build>true</docker.skip.build>
     </properties>
     <dependencies>
         <dependency>
@@ -120,6 +121,39 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.37.0</version>
+                <executions>
+                    <execution>
+                        <id>build</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${docker.skip.build}</skip>
+                    <images>
+                        <image>
+                            <name>youtube-trimmer/${project.artifactId}:latest</name>
+                            <alias>${project.artifactId}</alias>
+                            <build>
+                                <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+                                <assembly>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                            </build>
+                            <run>
+                                <containerNamePattern>%a</containerNamePattern>
+                            </run>
+                        </image>
+                    </images>
                 </configuration>
             </plugin>
         </plugins>
