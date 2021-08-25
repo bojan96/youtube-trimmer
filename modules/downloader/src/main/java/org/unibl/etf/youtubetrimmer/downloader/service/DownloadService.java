@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class DownloadService {
 
-    private static final String OUTPUT_FILENAME_FORMAT = "%(id)s";
+    private static final String OUTPUT_FILENAME_FORMAT = "out";
     private static final int POLL_TIME = 500;
     private final DownloaderProperties downloadProps;
     private final ConcurrentLinkedQueue<Integer> cancelQueue = new ConcurrentLinkedQueue<>();
@@ -55,7 +55,9 @@ public class DownloadService {
     @SneakyThrows
     private Optional<Path> getDownloadedVideoPath() {
         @Cleanup Stream<Path> files = Files.list(Path.of(downloadProps.getWorkingDirectory()));
-        return files.findFirst();
+        return files
+                .filter(p -> p.getFileName().toString().startsWith(OUTPUT_FILENAME_FORMAT))
+                .findFirst();
     }
 
     @SneakyThrows
