@@ -58,7 +58,7 @@ public class DownloadQueueHandler {
             }
 
             Path videoPath = video.get();
-            String videoFilename = message.getJobId() + "." + FileUtils.getExtension(videoPath.getFileName().toString());
+            String videoFilename = jobEntity.getVideo().getId() + "." + FileUtils.getExtension(videoPath.getFileName().toString());
             Path targetPath = Path.of(props.getVideoDirectory()).resolve(videoFilename);
             Files.copy(videoPath, targetPath);
             jobEntity.getVideo().setVideoReference(targetPath.toString());
