@@ -12,6 +12,7 @@ import org.unibl.etf.youtubetrimmer.common.messaging.Queues;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.JobEventMessage;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.TrimMessage;
 import org.unibl.etf.youtubetrimmer.common.repository.JobRepository;
+import org.unibl.etf.youtubetrimmer.common.util.FileUtils;
 import org.unibl.etf.youtubetrimmer.trimmer.properties.TrimmerProperties;
 import org.unibl.etf.youtubetrimmer.trimmer.service.MessagingService;
 import org.unibl.etf.youtubetrimmer.trimmer.service.TrimmingService;
@@ -56,8 +57,9 @@ public class TrimQueueHandler {
         }
 
         Path videoPath = video.get();
-        Path targetPath = Path.of(props.getOutputDirectory()).resolve(message.getJobId() +
-                videoPath.getFileName().toString());
+        String targetFilename = message.getJobId() + "." +
+                FileUtils.getExtension(videoPath.getFileName().toString());
+        Path targetPath = Path.of(props.getOutputDirectory()).resolve(targetFilename);
         Files.copy(videoPath, targetPath);
 
         jobEntity.setTrimmedVideoReference(targetPath.toString());
