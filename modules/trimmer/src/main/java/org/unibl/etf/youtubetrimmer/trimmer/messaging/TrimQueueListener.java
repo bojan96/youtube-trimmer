@@ -25,7 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RabbitListener(queues = Queues.TRIM, containerFactory = "containerFactory")
 @Log4j2
-public class TrimQueueHandler {
+public class TrimQueueListener {
 
     private final JobRepository jobRepo;
     private final MessagingService messagingService;

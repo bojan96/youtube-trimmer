@@ -13,7 +13,7 @@ import org.unibl.etf.youtubetrimmer.downloader.service.DownloadService;
 @RequiredArgsConstructor
 @RabbitListener(queues = "#{commandQueue.name}")
 @Log4j2
-public class CommandQueueHandler {
+public class CommandQueueListener {
 
     private final DownloadService downloadService;
     @RabbitHandler

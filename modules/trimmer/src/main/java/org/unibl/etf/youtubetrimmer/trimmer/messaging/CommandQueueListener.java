@@ -11,7 +11,7 @@ import org.unibl.etf.youtubetrimmer.trimmer.service.TrimmingService;
 @Component
 @RequiredArgsConstructor
 @RabbitListener(queues = "#{commandQueue.name}")
-public class CommandQueueHandler {
+public class CommandQueueListener {
 
     private final TrimmingService trimmingService;
 

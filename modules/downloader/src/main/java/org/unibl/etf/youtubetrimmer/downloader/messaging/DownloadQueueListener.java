@@ -26,7 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RabbitListener(queues = Queues.DOWNLOAD, containerFactory = "containerFactory")
 @Log4j2
-public class DownloadQueueHandler {
+public class DownloadQueueListener {
 
     private final JobRepository jobRepo;
     private final DownloadService downloadService;
