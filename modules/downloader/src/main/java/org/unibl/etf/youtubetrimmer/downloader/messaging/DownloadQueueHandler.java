@@ -13,6 +13,7 @@ import org.unibl.etf.youtubetrimmer.common.messaging.model.DownloadMessage;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.JobEventMessage;
 import org.unibl.etf.youtubetrimmer.common.messaging.model.TrimMessage;
 import org.unibl.etf.youtubetrimmer.common.repository.JobRepository;
+import org.unibl.etf.youtubetrimmer.common.util.FileUtils;
 import org.unibl.etf.youtubetrimmer.downloader.properties.DownloaderProperties;
 import org.unibl.etf.youtubetrimmer.downloader.service.DownloadService;
 import org.unibl.etf.youtubetrimmer.downloader.service.MessagingService;
@@ -47,22 +48,27 @@ public class DownloadQueueHandler {
             return;
         }
 
-        markJobAsDownloading(jobEntity);
-        Optional<Path> video = downloadService.download(message.getVideoUrl(), message.getJobId());
-        if (video.isEmpty()) {
-            log.info("Job(id = {}) is canceled", message.getJobId());
-            return;
+        if (jobEntity.getVideo().getVideoReference() == null) {
+
+            markJobAsDownloading(jobEntity);
+            Optional<Path> video = downloadService.download(message.getVideoUrl(), message.getJobId());
+            if (video.isEmpty()) {
+                log.info("Job(id = {}) is canceled", message.getJobId());
+                return;
+            }
+
+            Path videoPath = video.get();
+            String videoFilename = message.getJobId() + "." + FileUtils.getExtension(videoPath.getFileName().toString());
+            Path targetPath = Path.of(props.getVideoDirectory()).resolve(videoFilename);
+            Files.copy(videoPath, targetPath);
+            jobEntity.getVideo().setVideoReference(targetPath.toString());
+        } else {
+            log.info("Job(id = {}) - Video already downloaded, skipping download", message.getJobId());
         }
-
-        Path videoPath = video.get();
-        Path targetPath = Path.of(props.getVideoDirectory()).resolve(videoPath.getFileName());
-        Files.copy(videoPath, targetPath);
-
-        jobEntity.getVideo().setVideoReference(targetPath.toString());
         markJobAsWaitingTrim(jobEntity);
         messagingService.sendMessageToTrimQueue(TrimMessage.builder().jobId(message.getJobId()).build());
-        log.info("Video for job(id = {}) downloaded successfully(path = {})",
-                message.getJobId(), videoPath.toString());
+        log.info("Video for job(id = {}) downloaded successfully",
+                message.getJobId());
     }
 
     private void markJobAsDownloading(JobEntity jobEntity) {
