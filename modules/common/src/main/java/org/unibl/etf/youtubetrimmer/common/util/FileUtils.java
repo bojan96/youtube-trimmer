@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public class FileUtils {
     public static void cleanDirectory(Path directory) throws IOException {
 
-        if(!Files.isDirectory(directory))
+        if (!Files.isDirectory(directory))
             throw new IllegalArgumentException(String.format("%s is not a directory", directory));
 
         @Cleanup Stream<Path> files = Files.list(directory);
@@ -25,5 +25,13 @@ public class FileUtils {
                 throw new UncheckedIOException(e);
             }
         });
+    }
+
+    public static String getExtension(String filename) {
+        String[] splittedFilename = filename.split("\\.");
+        if(splittedFilename[0].equals(filename))
+            return null;
+
+        return splittedFilename[splittedFilename.length - 1];
     }
 }
