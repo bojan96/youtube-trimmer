@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class TrimmingService {
 
     private final TrimmerProperties props;
-    private static final String OUTPUT_EXTENSION = "mp4";
+    private static final String OUTPUT_FILENAME = "out.mp4";
     private static final int POLL_TIME = 500;
     private final ConcurrentLinkedQueue<Integer> cancelQueue = new ConcurrentLinkedQueue<>();
 
@@ -47,9 +47,6 @@ public class TrimmingService {
     @SneakyThrows
     private Process createTrimProcess(String videoPath, int trimFrom, int length) {
 
-        String filename = Path.of(videoPath).getFileName().toString()
-                .split("\\.")[0] + "." + OUTPUT_EXTENSION;
-
         ProcessBuilder builder = new ProcessBuilder(
                 "ffmpeg",
                 "-i",
@@ -60,7 +57,7 @@ public class TrimmingService {
                 Integer.toString(length),
                 "-codec:v",
                 "libx264",
-                filename);
+                OUTPUT_FILENAME);
         builder.redirectError(ProcessBuilder.Redirect.DISCARD);
         builder.directory(new File(props.getWorkingDirectory()));
         return builder.start();
@@ -73,8 +70,7 @@ public class TrimmingService {
 
     @SneakyThrows
     private Optional<Path> getTrimmedVideoPath() {
-        @Cleanup Stream<Path> files = Files.list(Path.of(props.getWorkingDirectory()));
-        return files.findFirst();
+        return Optional.of(Path.of(props.getWorkingDirectory()).resolve(OUTPUT_FILENAME));
     }
 
 }
