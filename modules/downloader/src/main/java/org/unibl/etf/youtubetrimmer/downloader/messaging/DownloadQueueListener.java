@@ -44,7 +44,7 @@ public class DownloadQueueListener {
 
         JobEntity jobEntity = job.get();
         if (jobEntity.getStatus() == JobStatus.CANCELED) {
-            log.info("Job(id = {}) is canceled", message.getJobId());
+            log.info("Job(id = {}) - Job is canceled", message.getJobId());
             return;
         }
 
@@ -53,7 +53,7 @@ public class DownloadQueueListener {
             markJobAsDownloading(jobEntity);
             Optional<Path> video = downloadService.download(message.getVideoUrl(), message.getJobId());
             if (video.isEmpty()) {
-                log.info("Job(id = {}) is canceled", message.getJobId());
+                log.info("Job(id = {}) - Job is canceled", message.getJobId());
                 return;
             }
 
@@ -67,7 +67,7 @@ public class DownloadQueueListener {
         }
         markJobAsWaitingTrim(jobEntity);
         messagingService.sendMessageToTrimQueue(TrimMessage.builder().jobId(message.getJobId()).build());
-        log.info("Video for job(id = {}) downloaded successfully",
+        log.info("Job(id = {}) - Video downloaded successfully",
                 message.getJobId());
     }
 

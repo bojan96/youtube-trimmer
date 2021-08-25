@@ -43,7 +43,7 @@ public class TrimQueueListener {
 
         JobEntity jobEntity = job.get();
         if (jobEntity.getStatus() == JobStatus.CANCELED) {
-            log.info("Job(id = {}) is canceled", message.getJobId());
+            log.info("Job(id = {}) - Job is canceled", message.getJobId());
             return;
         }
 
@@ -52,7 +52,7 @@ public class TrimQueueListener {
                 jobEntity.getTrimFrom(), jobEntity.getTrimTo(), message.getJobId());
 
         if (video.isEmpty()) {
-            log.info("Job(id = {}) is canceled", message.getJobId());
+            log.info("Job(id = {}) - Job is canceled", message.getJobId());
             return;
         }
 
@@ -64,7 +64,7 @@ public class TrimQueueListener {
 
         jobEntity.setTrimmedVideoReference(targetPath.toString());
         markJobAsCompleted(jobEntity);
-        log.info("Job(id = {}) processed successfully", message.getJobId());
+        log.info("Job(id = {}) - Video processed successfully", message.getJobId());
 
     }
 
