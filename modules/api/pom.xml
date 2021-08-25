@@ -139,6 +139,7 @@
                 </executions>
                 <configuration>
                     <skip>${docker.skip.build}</skip>
+                    <verbose>true</verbose>
                     <images>
                         <image>
                             <name>youtube-trimmer/${project.artifactId}:latest</name>
