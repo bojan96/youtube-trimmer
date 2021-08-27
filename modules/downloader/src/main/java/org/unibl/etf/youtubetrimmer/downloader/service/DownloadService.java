@@ -27,7 +27,7 @@ public class DownloadService {
     @SneakyThrows
     public Optional<Path> download(String videoUrl, int jobId) {
         cleanWorkingDir();
-        Process process = createDownloadProcess(videoUrl);
+        Process process = createDownloadProcess(videoUrl, jobId);
 
         while (process.isAlive()) {
             process.waitFor(POLL_TIME, TimeUnit.MILLISECONDS);
@@ -45,10 +45,12 @@ public class DownloadService {
     }
 
     @SneakyThrows
-    private Process createDownloadProcess(String videoUrl) {
+    private Process createDownloadProcess(String videoUrl, int jobId) {
         ProcessBuilder builder = new ProcessBuilder("youtube-dl", "-o",
                 OUTPUT_FILENAME_FORMAT, videoUrl);
         builder.directory(new File(downloadProps.getWorkingDirectory()));
+        builder.redirectErrorStream(true);
+        builder.redirectOutput(new File(downloadProps.getProcessLogsDirectory(), jobId + ".log"));
         return builder.start();
     }
 

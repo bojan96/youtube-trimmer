@@ -5,3 +5,4 @@ spring:
 downloader:
   working-directory: ${user.home}/youtube-trimmer/downloader
   video-directory: ${user.home}/youtube-trimmer/downloads
+  process-logs-directory: ${user.home}/youtube-trimmer/logs/downloader/process
