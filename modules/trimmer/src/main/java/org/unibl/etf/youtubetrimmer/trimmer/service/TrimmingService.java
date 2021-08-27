@@ -1,6 +1,5 @@
 package org.unibl.etf.youtubetrimmer.trimmer.service;
 
-import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -8,12 +7,10 @@ import org.unibl.etf.youtubetrimmer.common.util.FileUtils;
 import org.unibl.etf.youtubetrimmer.trimmer.properties.TrimmerProperties;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +24,7 @@ public class TrimmingService {
     @SneakyThrows
     public Optional<Path> trim(String videoPath, int trimFrom, int trimTo, int jobId) {
         cleanWorkingDir();
-        Process process = createTrimProcess(videoPath, trimFrom, trimTo - trimFrom);
+        Process process = createTrimProcess(videoPath, trimFrom, trimTo - trimFrom, jobId);
 
         while (process.isAlive()) {
             process.waitFor(POLL_TIME, TimeUnit.MILLISECONDS);
@@ -45,7 +42,7 @@ public class TrimmingService {
     }
 
     @SneakyThrows
-    private Process createTrimProcess(String videoPath, int trimFrom, int length) {
+    private Process createTrimProcess(String videoPath, int trimFrom, int length, int jobId) {
 
         ProcessBuilder builder = new ProcessBuilder(
                 "ffmpeg",
@@ -58,7 +55,9 @@ public class TrimmingService {
                 "-codec:v",
                 "libx264",
                 OUTPUT_FILENAME);
-        builder.redirectError(ProcessBuilder.Redirect.DISCARD);
+
+        builder.redirectErrorStream(true);
+        builder.redirectError(new File(props.getProcessLogsDirectory(), jobId + ".log"));
         builder.directory(new File(props.getWorkingDirectory()));
         return builder.start();
     }

@@ -12,4 +12,5 @@ import org.springframework.validation.annotation.Validated;
 public class TrimmerProperties {
     private String workingDirectory;
     private String outputDirectory;
+    private String processLogsDirectory;
 }
