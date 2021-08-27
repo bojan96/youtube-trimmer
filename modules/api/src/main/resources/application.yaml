@@ -12,9 +12,10 @@ spring:
   config:
     activate:
       on-profile: k8s
-
   datasource:
     url: jdbc:mysql://mysql/youtube_trimmer?user=root&password=root
+  rabbitmq:
+    host: rabbitmq
 
 authentication:
   token:
