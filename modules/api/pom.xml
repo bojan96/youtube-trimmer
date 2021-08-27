@@ -16,6 +16,7 @@
     <properties>
         <java.version>11</java.version>
         <docker.skip.build>true</docker.skip.build>
+        <docker.image.name>youtube-trimmer/${project.artifactId}:latest</docker.image.name>
     </properties>
     <dependencies>
         <dependency>
@@ -142,7 +143,7 @@
                     <verbose>true</verbose>
                     <images>
                         <image>
-                            <name>youtube-trimmer/${project.artifactId}:latest</name>
+                            <name>${docker.image.name}</name>
                             <alias>${project.artifactId}</alias>
                             <build>
                                 <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
@@ -156,6 +157,33 @@
                         </image>
                     </images>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>k8s-copy-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/k8s</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/k8s</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>*.yaml</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

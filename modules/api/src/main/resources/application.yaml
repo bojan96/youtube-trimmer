@@ -6,3 +6,16 @@ authentication:
   token:
     signing-key-path: ${user.home}/youtube-trimmer/key
     expiration-duration: 7   # Days
+
+---
+spring:
+  config:
+    activate:
+      on-profile: k8s
+
+  datasource:
+    url: jdbc:mysql://mysql/youtube_trimmer?user=root&password=root
+
+authentication:
+  token:
+    signing-key-path: /app/secret/key
