@@ -6,3 +6,18 @@ downloader:
   working-directory: ${user.home}/youtube-trimmer/downloader
   video-directory: ${user.home}/youtube-trimmer/downloads
   process-logs-directory: ${user.home}/youtube-trimmer/logs/downloader/process
+
+---
+spring:
+  config:
+    activate:
+      on-profile: k8s
+  datasource:
+    url: jdbc:mysql://mysql/youtube_trimmer?user=root&password=root
+  rabbitmq:
+    host: rabbitmq
+
+downloader:
+  working-directory: /app/workdir
+  video-directory: /data/video/downloads
+  process-logs-directory: /var/log/downloader/process
