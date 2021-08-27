@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trimmer
+spec:
+  selector:
+    matchLabels:
+      app: trimmer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: trimmer
+    spec:
+      containers:
+        - name: trimmer
+          image: @docker.image.name@
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /data/video/downloads
+              name: downloads
+            - mountPath: /var/log/trimmer
+              name: logs
+            - mountPath: /data/video/trimmed
+              name: trimmed
+      volumes:
+        - name: downloads
+          hostPath:
+            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/video/downloads
+            type: Directory
+        - name: logs
+          hostPath:
+            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/logs/trimmer
+            type: Directory
+        - name: trimmed
+          hostPath:
+            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/video/trimmed
+            type: Directory

@@ -5,3 +5,19 @@ spring:
 trimmer:
   working-directory: ${user.home}/youtube-trimmer/trimmer
   output-directory: ${user.home}/youtube-trimmer/trimmed
+  process-logs-directory: ${user.home}/youtube-trimmer/logs/trimmer/process
+
+---
+spring:
+  config:
+    activate:
+      on-profile: k8s
+  datasource:
+    url: jdbc:mysql://mysql/youtube_trimmer?user=root&password=root
+  rabbitmq:
+    host: rabbitmq
+
+trimmer:
+  working-directory: /app/workdir
+  output-directory: /data/video/trimmed
+  process-logs-directory: /var/log/trimmer/process
