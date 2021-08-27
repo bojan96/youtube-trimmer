@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: downloader
+spec:
+  selector:
+    matchLabels:
+      app: downloader
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: downloader
+    spec:
+      containers:
+        - name: downloader
+          image: @docker.image.name@
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /data/video/downloads
+              name: downloads
+            - mountPath: /var/log/downloader
+              name: logs
+      volumes:
+        - name: downloads
+          hostPath:
+            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/video/downloads
+            type: Directory
+        - name: logs
+          hostPath:
+            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/logs/downloader
+            type: Directory
