@@ -24,7 +24,7 @@ spec:
       volumes:
         - name: data
           hostPath:
-            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/rabbitmq/data
+            path: /youtube-trimmer/rabbitmq/data
             type: Directory
 ---
 apiVersion: v1

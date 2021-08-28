@@ -25,9 +25,9 @@ spec:
       volumes:
         - name: downloads
           hostPath:
-            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/video/downloads
+            path: /youtube-trimmer/video/downloads
             type: Directory
         - name: logs
           hostPath:
-            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/logs/downloader
+            path: /youtube-trimmer/kubernetes/logs/downloader
             type: Directory

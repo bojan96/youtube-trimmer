@@ -31,11 +31,11 @@ spec:
       volumes:
         - name: data
           hostPath:
-            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/mysql/data
+            path: /youtube-trimmer/mysql/data
             type: Directory
         - name: init
           hostPath:
-            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/mysql/init
+            path: /youtube-trimmer//mysql/init
             type: Directory
 ---
 apiVersion: v1

@@ -25,7 +25,7 @@ spec:
       volumes:
         - name: key
           hostPath:
-            path: /run/desktop/mnt/host/c/Users/Bojan/youtube-trimmer/kubernetes/api
+            path: /youtube-trimmer/api
             type: Directory
 ---
 apiVersion: v1
