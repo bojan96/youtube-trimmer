@@ -29,5 +29,5 @@ spec:
             type: Directory
         - name: logs
           hostPath:
-            path: /youtube-trimmer/kubernetes/logs/downloader
+            path: /youtube-trimmer/logs/downloader
             type: Directory
