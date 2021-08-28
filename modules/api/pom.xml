@@ -18,6 +18,7 @@
         <docker.skip.build>true</docker.skip.build>
         <docker.image.name>youtube-trimmer/${project.artifactId}:latest</docker.image.name>
         <docker.registry.uri>localhost:32000</docker.registry.uri>
+        <docker.skip.push>true</docker.skip.push>
     </properties>
     <dependencies>
         <dependency>
@@ -142,6 +143,7 @@
                 <configuration>
                     <registry>${docker.registry.uri}</registry>
                     <skip>${docker.skip.build}</skip>
+                    <skipPush>${docker.skip.push}</skipPush>
                     <verbose>true</verbose>
                     <images>
                         <image>
