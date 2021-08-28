@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: downloader
-          image: @docker.image.name@
+          image: @docker.registry.uri@/@docker.image.name@
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /data/video/downloads
