@@ -16,7 +16,7 @@ spec:
       containers:
         - name: api
           image: @docker.registry.uri@/@docker.image.name@
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           volumeMounts:
