@@ -3,6 +3,7 @@ package org.unibl.etf.youtubetrimmer.trimmer.service;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.youtubetrimmer.common.exception.ProcessException;
 import org.unibl.etf.youtubetrimmer.common.util.FileUtils;
 import org.unibl.etf.youtubetrimmer.trimmer.properties.TrimmerProperties;
 
@@ -33,6 +34,9 @@ public class TrimmingService {
                 return Optional.empty();
             }
         }
+
+        if(process.exitValue() != 0)
+            throw new ProcessException(process.exitValue(), process.info().commandLine().get());
 
         return getTrimmedVideoPath();
     }

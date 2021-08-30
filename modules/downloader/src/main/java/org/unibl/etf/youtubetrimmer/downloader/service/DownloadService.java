@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.youtubetrimmer.common.util.FileUtils;
+import org.unibl.etf.youtubetrimmer.common.exception.ProcessException;
 import org.unibl.etf.youtubetrimmer.downloader.properties.DownloaderProperties;
 
 import java.io.File;
@@ -37,6 +38,9 @@ public class DownloadService {
                 return Optional.empty();
             }
         }
+
+        if(process.exitValue() != 0)
+            throw new ProcessException(process.exitValue(), process.info().commandLine().get());
 
         return getDownloadedVideoPath();
     }
