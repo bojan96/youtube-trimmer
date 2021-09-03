@@ -22,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.cors();
         http.addFilterAt(authFilter, BasicAuthenticationFilter.class);
         http.authorizeRequests().mvcMatchers("/api/auth/login").permitAll();
         http.authorizeRequests().mvcMatchers("/api/auth/token/refresh").authenticated();
