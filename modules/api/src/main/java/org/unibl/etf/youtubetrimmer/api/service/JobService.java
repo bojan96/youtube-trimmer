@@ -85,8 +85,7 @@ public class JobService {
     }
 
     public List<JobDetails> getJobs(int userId) {
-        List<JobEntity> jobs = jobRepo.findAll(userJobsExample(userId),
-                Sort.by(Sort.Order.desc("date")));
+        List<JobEntity> jobs = jobRepo.findByUserIdAndStatusNotOrderByDateDesc(userId, JobStatus.CANCELED);
         List<JobDetails> jobDetails = mapEntityToDetails(jobs);
         return jobDetails;
     }
