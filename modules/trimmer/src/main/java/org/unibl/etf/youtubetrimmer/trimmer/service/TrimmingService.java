@@ -61,7 +61,7 @@ public class TrimmingService {
                 OUTPUT_FILENAME);
 
         builder.redirectErrorStream(true);
-        builder.redirectError(new File(props.getProcessLogsDirectory(), jobId + ".log"));
+        builder.redirectOutput(new File(props.getProcessLogsDirectory(), jobId + ".log"));
         builder.directory(new File(props.getWorkingDirectory()));
         return builder.start();
     }
