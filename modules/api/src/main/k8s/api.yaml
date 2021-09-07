@@ -24,19 +24,19 @@ spec:
               name: key
       volumes:
         - name: key
-          hostPath:
-            path: /youtube-trimmer/api
-            type: Directory
+          azureFile:
+            secretName: storage-secret
+            shareName: youtube-trimmer/api
+            readOnly: false
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: api
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: api
   ports:
     - port: 8080
       targetPort: 8080
-      nodePort: 32002

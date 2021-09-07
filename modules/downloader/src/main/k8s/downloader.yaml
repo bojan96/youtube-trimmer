@@ -24,10 +24,12 @@ spec:
               name: logs
       volumes:
         - name: downloads
-          hostPath:
-            path: /youtube-trimmer/video/downloads
-            type: Directory
+          azureFile:
+            secretName: storage-secret
+            shareName: youtube-trimmer/video/downloads
+            readOnly: false
         - name: logs
-          hostPath:
-            path: /youtube-trimmer/logs/downloader
-            type: Directory
+          azureFile:
+            secretName: storage-secret
+            shareName: youtube-trimmer/logs/downloader
+            readOnly: false

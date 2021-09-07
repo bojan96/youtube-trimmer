@@ -26,14 +26,17 @@ spec:
               name: trimmed
       volumes:
         - name: downloads
-          hostPath:
-            path: /youtube-trimmer/video/downloads
-            type: Directory
+          azureFile:
+            secretName: storage-secret
+            shareName: youtube-trimmer/video/downloads
+            readOnly: false
         - name: logs
-          hostPath:
-            path: /youtube-trimmer/logs/trimmer
-            type: Directory
+          azureFile:
+            secretName: storage-secret
+            shareName: youtube-trimmer/logs/trimmer
+            readOnly: false
         - name: trimmed
-          hostPath:
-            path: /youtube-trimmer/video/trimmed
-            type: Directory
+          azureFile:
+            secretName: storage-secret
+            shareName: youtube-trimmer/video/trimmed
+            readOnly: false

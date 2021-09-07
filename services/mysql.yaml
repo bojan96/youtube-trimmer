@@ -21,22 +21,17 @@ spec:
           ports:
             - containerPort: 3306
           volumeMounts:
-            - mountPath: /var/lib/mysql
-              name: data
             - mountPath: /docker-entrypoint-initdb.d
               name: init
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
       volumes:
-        - name: data
-          hostPath:
-            path: /youtube-trimmer/mysql/data
-            type: Directory
         - name: init
-          hostPath:
-            path: /youtube-trimmer/mysql/init
-            type: Directory
+          azureFile:
+            secretName: storage-secret
+            shareName: youtube-trimmer/mysql/init
+            readOnly: false
 ---
 apiVersion: v1
 kind: Service
@@ -44,10 +39,9 @@ metadata:
   name: mysql
 spec:
 #  type: ClusterIP
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: mysql
   ports:
     - port: 3306
       targetPort: 3306
-      nodePort: 32001
