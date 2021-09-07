@@ -35,7 +35,7 @@ spec:
             type: Directory
         - name: init
           hostPath:
-            path: /youtube-trimmer//mysql/init
+            path: /youtube-trimmer/mysql/init
             type: Directory
 ---
 apiVersion: v1
