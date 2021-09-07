@@ -199,4 +199,12 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>azure</id>
+            <properties>
+                <docker.registry.uri>youtubetrimmer.azurecr.io</docker.registry.uri>
+            </properties>
+        </profile>
+    </profiles>
 </project>
