@@ -34,8 +34,10 @@ public class VideoStorageService implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String connectionString = readConnectionString();
+        log.info("connection string: {}", connectionString);
         videoContainer = new BlobContainerClientBuilder()
-                .connectionString(readConnectionString())
+                .connectionString(connectionString)
                 .buildClient();
         if(!videoContainer.exists())
             videoContainer.create();;
