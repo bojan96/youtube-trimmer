@@ -36,6 +36,7 @@ public class VideoStorageService implements InitializingBean {
         String sasQueryParams = generateSasQueryParameters(blob);
         return UriComponentsBuilder
                 .fromHttpUrl(props.getDownloadUrlBase())
+                .pathSegment(videoContainer.getBlobContainerName(), name)
                 .query(sasQueryParams)
                 .build()
                 .toString();
