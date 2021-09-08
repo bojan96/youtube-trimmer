@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.youtubetrimmer.api.properties.StorageProperties;
 import org.unibl.etf.youtubetrimmer.trimmer.properties.TrimmerProperties;
 
 import java.nio.file.Files;
@@ -14,8 +15,7 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class VideoStorageService implements InitializingBean {
 
-    private static final String STORACE_ACCOUNT_CONNECTION_STRING_PATH = "/secret/azurestorageconnectionstring";
-    private final TrimmerProperties props;
+    private final StorageProperties props;
     private BlobContainerClient videoContainer;
 
     public void upload(Path videoPath, String name)
@@ -27,7 +27,7 @@ public class VideoStorageService implements InitializingBean {
     @SneakyThrows
     private String readConnectionString()
     {
-        return Files.readString(Path.of(STORACE_ACCOUNT_CONNECTION_STRING_PATH));
+        return Files.readString(Path.of(props.getConnectionStringPath()));
     }
 
     @Override
