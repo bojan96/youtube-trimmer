@@ -145,7 +145,7 @@
                     </execution>
                     <execution>
                         <id>push</id>
-                        <phase>package</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>push</goal>
                         </goals>
