@@ -153,6 +153,18 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!--Disable standard deploy-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
