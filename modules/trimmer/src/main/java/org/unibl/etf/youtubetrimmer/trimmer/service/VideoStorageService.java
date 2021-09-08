@@ -5,8 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import org.unibl.etf.youtubetrimmer.api.properties.StorageProperties;
-import org.unibl.etf.youtubetrimmer.trimmer.properties.TrimmerProperties;
+import org.unibl.etf.youtubetrimmer.trimmer.properties.StorageProperties;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

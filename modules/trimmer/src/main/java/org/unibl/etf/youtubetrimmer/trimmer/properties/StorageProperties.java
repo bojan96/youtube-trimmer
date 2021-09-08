@@ -1,4 +1,4 @@
-package org.unibl.etf.youtubetrimmer.api.properties;
+package org.unibl.etf.youtubetrimmer.trimmer.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
