@@ -6,11 +6,10 @@ import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.unibl.etf.youtubetrimmer.api.exception.ForbiddenAccessException;
-import org.unibl.etf.youtubetrimmer.api.exception.IllegalOperationException;
-import org.unibl.etf.youtubetrimmer.api.exception.NotFoundException;
+import org.unibl.etf.youtubetrimmer.api.exception.*;
 import org.unibl.etf.youtubetrimmer.api.model.Job;
 import org.unibl.etf.youtubetrimmer.api.model.JobDetails;
+import org.unibl.etf.youtubetrimmer.api.util.URLUtils;
 import org.unibl.etf.youtubetrimmer.api.util.YoutubeURLParser;
 import org.unibl.etf.youtubetrimmer.common.entity.JobEntity;
 import org.unibl.etf.youtubetrimmer.common.entity.JobStatus;
@@ -43,6 +42,12 @@ public class JobService {
     private final VideoStorageService storageService;
 
     public JobDetails createJob(Job job) {
+
+        if(!URLUtils.isValidYoutubeUrl(job.getVideoUrl()))
+            throw new URLNotSupportedException(job.getVideoUrl());
+
+        if(job.getTrimFrom() >= job.getTrimTo())
+            throw new TrimRangeInvalidException();
 
         String videoId = getVideoId(job.getVideoUrl());
         Optional<VideoEntity> video = videoRepo.findOne(Example.of(VideoEntity.builder()
