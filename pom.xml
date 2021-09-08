@@ -20,4 +20,20 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
+
+    <build>
+        <plugins>
+            <!--Disable standard deploy-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
