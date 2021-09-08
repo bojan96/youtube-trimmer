@@ -21,4 +21,7 @@ trimmer:
   working-directory: /app/workdir
   output-directory: /data/video/trimmed
   process-logs-directory: /var/log/trimmer/process
+
+storage:
   video-container-name: trimmed
+  connection-string-path: /secret/azurestorageconnectionstring
