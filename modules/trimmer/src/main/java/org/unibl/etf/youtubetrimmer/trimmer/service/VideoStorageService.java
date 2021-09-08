@@ -22,7 +22,6 @@ public class VideoStorageService implements InitializingBean {
     public void upload(Path videoPath, String name)
     {
         BlobClient client = videoContainer.getBlobClient(name);
-        log.info("Path:{}; name:{}", videoPath.toString(), name);
         client.uploadFromFile(videoPath.toString());
     }
 
@@ -35,9 +34,9 @@ public class VideoStorageService implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         String connectionString = readConnectionString();
-        log.info("connection string: {}", connectionString);
         videoContainer = new BlobContainerClientBuilder()
                 .connectionString(connectionString)
+                .containerName(props.getVideoContainerName())
                 .buildClient();
         if(!videoContainer.exists())
             videoContainer.create();;
