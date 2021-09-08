@@ -39,6 +39,7 @@ public class JobService {
     private final MessagingService messagingService;
     private final TimeService timeService;
     private final ModelMapper mapper;
+    private final VideoStorageService storageService;
 
     public JobDetails createJob(Job job) {
 
@@ -87,6 +88,21 @@ public class JobService {
     public List<JobDetails> getJobs(int userId) {
         List<JobEntity> jobs = jobRepo.findByUserIdAndStatusNotOrderByDateDesc(userId, JobStatus.CANCELED);
         List<JobDetails> jobDetails = mapEntityToDetails(jobs);
+
+        for(int i = 0; i < jobs.size(); ++i)
+        {
+            JobEntity jobEntity = jobs.get(i);
+
+            if(jobEntity.getStatus() == JobStatus.COMPLETE)
+            {
+                jobDetails
+                        .get(i)
+                        .setDownloadUrl(storageService.getVideoDownloadUrl(jobEntity.getTrimmedVideoReference()));
+
+            }
+        }
+
+
         return jobDetails;
     }
 
@@ -123,14 +139,6 @@ public class JobService {
         Type listType = new TypeToken<List<JobDetails>>() {
         }.getType();
         return mapper.map(jobs, listType);
-    }
-
-    private Example<JobEntity> userJobsExample(int userId) {
-        JobEntity job = new JobEntity();
-        UserEntity u = new UserEntity();
-        u.setId(userId);
-        job.setUser(u);
-        return Example.of(job);
     }
 
     private LocalDateTime now() {

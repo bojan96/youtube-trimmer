@@ -20,3 +20,9 @@ spring:
 authentication:
   token:
     signing-key-path: /app/secret/key
+
+storage:
+  video-container-name: trimmed
+  connection-string-path: /secret/azurestorageconnectionstring
+  sas-token-expiry-duration-days: 2
+  download-url-base: https://youtubetrimmer.blob.core.windows.net
