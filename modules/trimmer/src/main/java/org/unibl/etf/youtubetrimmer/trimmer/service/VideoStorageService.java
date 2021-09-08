@@ -1,11 +1,9 @@
 package org.unibl.etf.youtubetrimmer.trimmer.service;
 
-import com.azure.storage.blob.BlobClient;
-import com.azure.storage.blob.BlobContainerClient;
-import com.azure.storage.blob.BlobServiceClient;
-import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.youtubetrimmer.trimmer.properties.TrimmerProperties;
 
@@ -14,22 +12,15 @@ import java.nio.file.Path;
 
 @Service
 @RequiredArgsConstructor
-public class VideoStorageService {
+public class VideoStorageService implements InitializingBean {
 
     private static final String STORACE_ACCOUNT_CONNECTION_STRING_PATH = "/secret/azurestorageconnectionstring";
     private final TrimmerProperties props;
+    private BlobContainerClient videoContainer;
 
-    public void upload(Path videoPath, String blobName)
+    public void upload(Path videoPath, String name)
     {
-        BlobServiceClient blobClient = new BlobServiceClientBuilder()
-                .connectionString(readConnectionString()).buildClient();
-
-        BlobContainerClient videoContainer = blobClient.getBlobContainerClient(props.getVideoContainerName());
-
-        if(!videoContainer.exists())
-            videoContainer.create();
-
-        BlobClient client = videoContainer.getBlobClient(blobName);
+        BlobClient client = videoContainer.getBlobClient(name);
         client.uploadFromFile(videoPath.toString());
     }
 
@@ -37,5 +28,15 @@ public class VideoStorageService {
     private String readConnectionString()
     {
         return Files.readString(Path.of(STORACE_ACCOUNT_CONNECTION_STRING_PATH));
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        videoContainer = new BlobContainerClientBuilder()
+                .connectionString(readConnectionString())
+                .buildClient();
+        if(!videoContainer.exists())
+            videoContainer.create();;
+
     }
 }
