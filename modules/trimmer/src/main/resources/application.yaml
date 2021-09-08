@@ -21,3 +21,4 @@ trimmer:
   working-directory: /app/workdir
   output-directory: /data/video/trimmed
   process-logs-directory: /var/log/trimmer/process
+  video-container-name: trimmed

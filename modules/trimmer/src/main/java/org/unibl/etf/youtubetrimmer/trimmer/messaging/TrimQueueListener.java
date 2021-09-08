@@ -16,6 +16,7 @@ import org.unibl.etf.youtubetrimmer.common.util.FileUtils;
 import org.unibl.etf.youtubetrimmer.trimmer.properties.TrimmerProperties;
 import org.unibl.etf.youtubetrimmer.trimmer.service.MessagingService;
 import org.unibl.etf.youtubetrimmer.trimmer.service.TrimmingService;
+import org.unibl.etf.youtubetrimmer.trimmer.service.VideoStorageService;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,6 +32,7 @@ public class TrimQueueListener {
     private final MessagingService messagingService;
     private final TrimmingService trimmingService;
     private final TrimmerProperties props;
+    private final VideoStorageService storageService;
 
     @RabbitHandler
     @SneakyThrows
@@ -59,10 +61,10 @@ public class TrimQueueListener {
         Path videoPath = video.get();
         String targetFilename = message.getJobId() + "." +
                 FileUtils.getExtension(videoPath.getFileName().toString());
-        Path targetPath = Path.of(props.getOutputDirectory()).resolve(targetFilename);
-        Files.copy(videoPath, targetPath);
 
-        jobEntity.setTrimmedVideoReference(targetPath.toString());
+        storageService.upload(videoPath, targetFilename);
+
+        jobEntity.setTrimmedVideoReference(targetFilename);
         markJobAsCompleted(jobEntity);
         log.info("Job(id = {}) - Video processed successfully", message.getJobId());
 

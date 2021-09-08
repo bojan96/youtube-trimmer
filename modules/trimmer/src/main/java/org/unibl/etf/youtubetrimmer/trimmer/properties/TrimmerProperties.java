@@ -13,4 +13,5 @@ public class TrimmerProperties {
     private String workingDirectory;
     private String outputDirectory;
     private String processLogsDirectory;
+    private String videoContainerName;
 }

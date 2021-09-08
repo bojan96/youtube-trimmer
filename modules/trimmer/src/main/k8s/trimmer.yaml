@@ -24,6 +24,8 @@ spec:
               name: logs
             - mountPath: /data/video/trimmed
               name: trimmed
+            - mountPath: /secret
+              name: secret
       volumes:
         - name: downloads
           azureFile:
@@ -40,3 +42,6 @@ spec:
             secretName: storage-secret
             shareName: youtube-trimmer/video/trimmed
             readOnly: false
+        - name: secret
+          secret:
+            secretName: storage-secret
