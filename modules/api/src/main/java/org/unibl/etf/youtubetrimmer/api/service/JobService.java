@@ -6,6 +6,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.youtubetrimmer.api.exception.ForbiddenAccessException;
 import org.unibl.etf.youtubetrimmer.api.exception.IllegalOperationException;
 import org.unibl.etf.youtubetrimmer.api.exception.NotFoundException;
 import org.unibl.etf.youtubetrimmer.api.model.Job;
@@ -77,12 +78,19 @@ public class JobService {
         return details;
     }
 
-    public Optional<JobDetails> getJob(int jobId) {
-        return jobRepo.findById(jobId)
-                .map(j -> {
-                    JobDetails jobDetails = mapper.map(j, JobDetails.class);
-                    return jobDetails;
-                });
+    public Optional<JobDetails> getJob(int jobId, int userId) {
+        Optional<JobEntity> job = jobRepo.findById(jobId);
+        if(job.isEmpty())
+            return Optional.empty();
+
+        JobEntity jobEntity = job.get();
+        if(jobEntity.getUser().getId() != userId)
+            throw new ForbiddenAccessException();
+        JobDetails jobDetails = mapper.map(jobEntity, JobDetails.class);
+        if(jobEntity.getStatus() == JobStatus.COMPLETE)
+            jobDetails.setDownloadUrl(storageService.getVideoDownloadUrl(jobEntity.getTrimmedVideoReference()));
+
+        return Optional.of(jobDetails);
     }
 
     public List<JobDetails> getJobs(int userId) {

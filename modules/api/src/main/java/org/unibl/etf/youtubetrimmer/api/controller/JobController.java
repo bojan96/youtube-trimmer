@@ -37,9 +37,9 @@ public class JobController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobResponse> getJob(@PathVariable int id) {
+    public ResponseEntity<JobResponse> getJob(@PathVariable int id, JwtAuthenticationToken user) {
         return ResponseEntity.of(jobService
-                .getJob(id)
+                .getJob(id, user.getId())
                 .map(j -> mapper.map(j, JobResponse.class)));
     }
 
