@@ -4,9 +4,10 @@ spring:
 
 trimmer:
   working-directory: ${user.home}/youtube-trimmer/trimmer
-  output-directory: ${user.home}/youtube-trimmer/trimmed
   process-logs-directory: ${user.home}/youtube-trimmer/logs/trimmer/process
-
+storage:
+  video-container-name: trimmed
+  connection-string-path: ${user.home}/youtube-trimmer/secret/azurestorageconnectionstring
 ---
 spring:
   config:
@@ -19,9 +20,7 @@ spring:
 
 trimmer:
   working-directory: /app/workdir
-  output-directory: /data/video/trimmed
   process-logs-directory: /var/log/trimmer/process
 
 storage:
-  video-container-name: trimmed
   connection-string-path: /secret/azurestorageconnectionstring

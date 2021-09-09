@@ -4,9 +4,14 @@ spring:
 
 authentication:
   token:
-    signing-key-path: ${user.home}/youtube-trimmer/key
+    signing-key-path: ${user.home}/youtube-trimmer/secret/key
     expiration-duration: 7   # Days
 
+storage:
+  video-container-name: trimmed
+  connection-string-path: ${user.home}/youtube-trimmer/secret/azurestorageconnectionstring
+  sas-token-expiry-duration-days: 2
+  download-url-base: http://127.0.0.1:10000/devstoreaccount1
 ---
 spring:
   config:
@@ -22,7 +27,5 @@ authentication:
     signing-key-path: /app/secret/key
 
 storage:
-  video-container-name: trimmed
   connection-string-path: /secret/azurestorageconnectionstring
-  sas-token-expiry-duration-days: 2
   download-url-base: https://youtubetrimmer.blob.core.windows.net
