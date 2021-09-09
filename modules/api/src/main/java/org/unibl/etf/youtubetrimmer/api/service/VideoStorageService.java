@@ -55,7 +55,7 @@ public class VideoStorageService implements InitializingBean {
         BlobSasPermission readPermission = new BlobSasPermission().setReadPermission(true);
         BlobServiceSasSignatureValues builder =
                 new BlobServiceSasSignatureValues(expiryTime, readPermission)
-                        .setProtocol(SasProtocol.HTTPS_ONLY)
+                        .setProtocol(SasProtocol.HTTPS_HTTP)
                         .setStartTime(startTime);
         return blob.generateSas(builder);
     }
