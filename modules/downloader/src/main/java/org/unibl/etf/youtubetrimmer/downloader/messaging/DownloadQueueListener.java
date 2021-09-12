@@ -20,6 +20,7 @@ import org.unibl.etf.youtubetrimmer.downloader.service.MessagingService;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
 @Component
@@ -64,7 +65,7 @@ public class DownloadQueueListener {
                     + "."
                     + FileUtils.getExtension(videoPath.getFileName().toString());
             Path targetPath = Path.of(props.getVideoDirectory()).resolve(videoFilename);
-            Files.copy(videoPath, targetPath);
+            Files.copy(videoPath, targetPath, StandardCopyOption.REPLACE_EXISTING);
             jobEntity.getVideo().setVideoReference(targetPath.toString());
         } else {
             log.info("Job(id = {}) - Video already downloaded, skipping download", message.getJobId());

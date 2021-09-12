@@ -22,7 +22,7 @@ public class VideoStorageService implements InitializingBean {
     public void upload(Path videoPath, String name)
     {
         BlobClient client = videoContainer.getBlobClient(name);
-        client.uploadFromFile(videoPath.toString());
+        client.uploadFromFile(videoPath.toString(), true);
     }
 
     @SneakyThrows
